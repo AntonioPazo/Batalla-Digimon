@@ -2,16 +2,35 @@ package paquete;
 
 import java.util.Random;
 import java.util.Scanner;
+import java.util.ArrayList;
 
+/**
+ * La clase BatallaDigital representa una batalla entre el Digimon del domador y un Digimon enemigo.
+ */
 public class BatallaDigital {
     Digimon enemigo;
 
-    public BatallaDigital() {
+    /**
+     * Constructor para inicializar una batalla con un Digimon enemigo aleatorio.
+     * @param domador Domador con el que se va a realizar la batalla.
+     */
+    public BatallaDigital(Domador domador) {
         Random rand = new Random();
         String[] nombres = {"Agumon", "Gabumon", "Patamon"};
-        this.enemigo = new Digimon(nombres[rand.nextInt(nombres.length)]);
+        ArrayList<String> nombresDisponibles = new ArrayList<>();
+        for (String nombre : nombres) {
+            if (!domador.nombresDeDigimon().contains(nombre)) {
+                nombresDisponibles.add(nombre);
+            }
+        }
+        this.enemigo = new Digimon(nombresDisponibles.get(rand.nextInt(nombresDisponibles.size())));
     }
 
+    /**
+     * Permite al domador elegir un Digimon de su equipo para la batalla.
+     * @param domador Domador que elige el Digimon.
+     * @return El Digimon elegido para la batalla.
+     */
     public Digimon elige(Domador domador) {
         Scanner sc = new Scanner(System.in);
         System.out.println("Elige un Digimon para la batalla:");
@@ -22,6 +41,10 @@ public class BatallaDigital {
         return domador.equipo.get(choice - 1);
     }
 
+    /**
+     * Realiza la batalla entre el Digimon elegido del domador y el Digimon enemigo.
+     * @param domador Domador que participa en la batalla.
+     */
     public void pelea(Domador domador) {
         Scanner sc = new Scanner(System.in);
         Digimon elegido = elige(domador);
@@ -34,8 +57,8 @@ public class BatallaDigital {
             System.out.println(enemigo);
 
             System.out.println("Elige una acción:");
-            System.out.println("1. Ataque 1");
-            System.out.println("2. Ataque 2");
+            System.out.println("1. Ataque 1 (Daño: " + elegido.attackPoints + ")");
+            System.out.println("2. Ataque 2 (Daño: " + (elegido.attackPoints * 2) + ")");
             System.out.println("3. Capturar");
 
             int accion = sc.nextInt();
